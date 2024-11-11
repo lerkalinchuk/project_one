@@ -242,5 +242,5 @@ while running:
         if eating_yet == True and (pygame.time.get_ticks() - start_eating) <= 2000:
             sc.blit(phrase[food_number].text,(100,100))
     pygame.display.update()
-    
+
 pygame.quit()
