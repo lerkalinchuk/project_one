@@ -5,23 +5,27 @@ pygame.init()
 display_size = (950,580)
 sc = pygame.display.set_mode(display_size)
 pygame.display.set_caption("Tamagochi")
+
 #загружаем фоны
-background0 = pygame.image.load("hello.png")
+background0 = pygame.image.load("images/hello.png")
 background0 = pygame.transform.scale(background0, display_size)
-background1 = pygame.image.load("background1.png")
+background1 = pygame.image.load("images/background1.png")
 background1 = pygame.transform.scale(background1, display_size)
-background2 = pygame.image.load("menu.png")
+background2 = pygame.image.load("images/menu.png")
 background2 = pygame.transform.scale(background2, display_size)
-background3 = pygame.image.load("bedroom.png")
+background3 = pygame.image.load("images/bedroom.png")
 background3 = pygame.transform.scale(background3, display_size)
-background4 = pygame.image.load("kitchen.png")
+background4 = pygame.image.load("images/kitchen.png")
 background4 = pygame.transform.scale(background4, display_size)
-table = pygame.image.load("table.png")
+table = pygame.image.load("images/table.png")
 table = pygame.transform.scale(table, (table.get_width()*0.27, table.get_height()*0.27))
 
+#инициализируем нужные шрифты
 F = pygame.font.SysFont("comicsansms", 50)
 f = pygame.font.SysFont("comicsansms", 25)
 fF = pygame.font.SysFont("comicsansms",38)
+
+#создаем классы
 class Text():
     def __init__(self, words, color, ff, bg):
         self.color = color
@@ -41,13 +45,14 @@ class Tamagotchi():
 
 #здесь все питомцы
 pet = [0 for i in range(4)]
-pet[0] = Tamagotchi("picachu.png", 1)
-pet[1] = Tamagotchi("cat1.png", 0.8)
-pet[2] = Tamagotchi("панда.png", 0.35)
-pet[3] = Tamagotchi("dog.png", 0.30)
+pet[0] = Tamagotchi("images/picachu.png", 1)
+pet[1] = Tamagotchi("images/cat1.png", 0.8)
+pet[2] = Tamagotchi("images/панда.png", 0.35)
+pet[3] = Tamagotchi("images/dog.png", 0.30)
 
-current_pet = 1
+current_pet = 0
 
+#заготовки реплик
 choose = Text("Выбери своего питомца", "purple", F, None)
 score = Text("Уровень счастья:", "purple", F, None)
 eating = Text("Кушать", "white", f, None)
@@ -55,34 +60,33 @@ sleep = Text("Спать", "white",f, None)
 back = Text("назад", "white", f, None)
 mess = Text("Я выспался!", "white", F, "purple")
 over = Text("Питомец погиб :((", "purple", F, None)
+
 #здесь все кнопки
-button_play = Button("play.png", 0.3)
+button_play = Button("images/play.png", 0.3)
 button_play.position = (display_size[0]//2 - button_play.size[0]//2, display_size[1]//3 - button_play.size[1]//2)
-button_left = Button("left.png", 0.3)
-button_right = Button("left.png",0.3)
-button_yes = Button("yes.png", 0.3)
+button_left = Button("images/left.png", 0.3)
+button_right = Button("images/left.png",0.3)
+button_yes = Button("images/yes.png", 0.3)
 button_right.image = pygame.transform.flip(button_right.image, True, False)
-button_quest = Button("question.png", 0.2)
-button_quest.position = (800, 40)
-button_func1 = Button("кнопка.png", 0.33)
+button_func1 = Button("images/кнопка.png", 0.33)
 button_func1.position = (758, 60)
-button_func2 = Button("кнопка.png", 0.33)
+button_func2 = Button("images/кнопка.png", 0.33)
 button_func2.position = (758, 60 + 50)
 button_left.position = (150 - button_left.size[0], 200 + pet[current_pet].size[1]//2)
 button_right.position = (150 + pet[current_pet].size[0], 200 + pet[current_pet].size[1]//2)
 button_yes.position = (20, 430)
-button_back = Button("кнопка.png", 0.33)
+button_back = Button("images/кнопка.png", 0.33)
 button_back.position = (15, 510)
-button_lamp = Button("lamp.png", 0.33)
+button_lamp = Button("images/lamp.png", 0.33)
 button_lamp.position = (800, 60)
 
 #список с едой класс кнопки
-food = [["milk", Button("milk.png", 0.1)],
-        ["cookie", Button("cokie.png", 0.45)],
-        ["carrot", Button("carrot.png", 0.2)],
-        ["candy", Button("candy.png", 0.1)],
-        ["pizza", Button("pizza.png", 0.2)],
-        ["meet", Button("meet.png", 0.2)]]
+food = [["milk", Button("images/milk.png", 0.1)],
+        ["cookie", Button("images/cokie.png", 0.45)],
+        ["carrot", Button("images/carrot.png", 0.2)],
+        ["candy", Button("images/candy.png", 0.1)],
+        ["pizza", Button("images/pizza.png", 0.2)],
+        ["meet", Button("images/meet.png", 0.2)]]
 food[0][1].position = (700,50)
 food[1][1].position = (800,50)
 food[2][1].position = (700,190)
@@ -97,18 +101,18 @@ phrase = [Text("Молоко я люблю!", "white", fF, "purple"),
           Text("Спасибо! ты знаешь, что я люблю", "white", fF, "purple"),
           Text("мм вкусненько", "white", fF, "purple"),
           Text("ну и блевотина...", "white", fF, "purple")]
-current_background = 0
-lamp = "on"
-sc.blit(background0,(0,0))
 
-#запускаем игру
-morning = False
-eating_yet = False
-init = False
+current_background = 0 #текущий фон
+lamp = "on" #лампа в спальне
+morning = False #индикатор недавнего пробуждения
+eating_yet = False #индикатор недавнего итинга
+init = False #питомец выбран
 running = True
 st = pygame.time.get_ticks()
+
+#запускаем игру
 while running:
-    if init:
+    if init:                #равномерное падение счётчика
         if pygame.time.get_ticks()-st >=1500:
             pet[current_pet].happy -= 1
             st = pygame.time.get_ticks()
@@ -146,19 +150,19 @@ while running:
             if button_back.position[0] <= event.pos[0] <= button_back.position[0] + button_back.size[0] and\
             button_back.position[1] <= event.pos[1] <= button_back.position[1] + button_back.size[1]:
                 current_background = 2
-                lamp = "on"
+                lamp = "on" #лампа включается при переходе в другую локацию
                 morning = False
             if button_lamp.position[0] <= event.pos[0] <= button_lamp.position[0] + button_lamp.size[0] and\
             button_lamp.position[1] <= event.pos[1] <= button_lamp.position[1] + button_lamp.size[1]:
                 if lamp == "on":
                     lamp = "off"
-                    start_ticks=pygame.time.get_ticks()
+                    start_ticks=pygame.time.get_ticks() #отсчитываем время с начала сна
                 else:
                     lamp = "on"
                     if (pygame.time.get_ticks()-start_ticks) >= 5000:
                         pet[current_pet].happy += 5
                         morning == True
-                        start_morning = pygame.time.get_ticks()
+                        start_morning = pygame.time.get_ticks() #Отсчитываем время с начала пробуждения
         elif current_background == 4 and event.type == pygame.MOUSEBUTTONDOWN:
             if button_back.position[0] <= event.pos[0] <= button_back.position[0] + button_back.size[0] and\
             button_back.position[1] <= event.pos[1] <= button_back.position[1] + button_back.size[1]:
@@ -170,13 +174,14 @@ while running:
                     pet[current_pet].happy += 3
                     food_number = n
                     eating_yet = True
-                    start_eating = pygame.time.get_ticks()
-    if current_background == 3 and lamp == "off":
+                    start_eating = pygame.time.get_ticks() #отсчитываем время с момента когда поел чтобы выводить нужную реплику
+    if current_background == 3 and lamp == "off": #если лампа выключена но прошло 5 сек то просыпается
         if (pygame.time.get_ticks()-start_ticks) >= 5000:
             pet[current_pet].happy += 5
             lamp = "on"
             morning = True
             start_morning = pygame.time.get_ticks()
+
     #обнова экрана
     if current_background == 1:
         background1.blit(choose.text, (30,50))
@@ -216,7 +221,7 @@ while running:
         background3.blit(back.text, (button_back.position[0]+20, button_back.position[1] ))
         background3.blit(button_lamp.image, button_lamp.position)
         sc.blit(background3, (0,0)) 
-        if lamp == "off":
+        if lamp == "off": #накладываем прозрачный черный
             night = pygame.Surface(display_size)
             night.fill((0,0,0))
             night.set_alpha(180)
@@ -237,4 +242,5 @@ while running:
         if eating_yet == True and (pygame.time.get_ticks() - start_eating) <= 2000:
             sc.blit(phrase[food_number].text,(100,100))
     pygame.display.update()
+    
 pygame.quit()
